@@ -17,7 +17,11 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 """
-import pkgutil, os, sys, imp, importlib, collections
+import os
+import sys
+import pkgutil
+import collections
+
 from PySide.QtGui import QDialog, QMessageBox, QApplication, QCursor, QFileDialog
 from PySide.QtCore import Qt
 
@@ -178,7 +182,7 @@ class AdvancedDialog(QDialog):
 
     def installVirtualEnv(self):
         # setting that determines if the package 'virtualenv' is installed (if not already present in the user's system)
-        # automatically while the application VE is bein setup
+        # automatically while the application VE is being setup
         pass
 
     def installSelectedPackages(self):
@@ -371,7 +375,18 @@ class AdvancedDialog(QDialog):
         else:
             self._pluginUpdater._pluginUpdateDict = {}
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-            package = reload(sys.modules[PLUGINS_PACKAGE_NAME])
+            if sys.version_info < (3, 0):
+                package = reload(sys.modules[PLUGINS_PACKAGE_NAME])
+            else:
+                import importlib
+                if sys.version_info > (3, 4):
+                    try:
+                        for pkg_path in sys.modules[PLUGINS_PACKAGE_NAME]:
+                            importlib.reload(sys.modules[pkg_path])
+                    except TypeError:
+                        pass
+
+                package = importlib.reload(sys.modules[PLUGINS_PACKAGE_NAME])
 #             try:
 #                 package = imp.reload(sys.modules['mapclientplugins'])
 #             except Exception:

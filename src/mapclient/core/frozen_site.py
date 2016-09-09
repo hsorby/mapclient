@@ -53,13 +53,22 @@ def addpackage(sitedir, name, known_paths):
                     sys.path.append(dir)
                     known_paths.add(dircase)
             except Exception:
-                print("Error processing line {:d} of {}:\n".format(n+1, fullname),
+                try:
+                    print("Error processing line {:d} of {}:\n".format(n+1, fullname),
                       file=sys.stderr)
+                except SyntaxError:
+                    print >>sys.stderr, "Error processing line {:d} of {}:\n".format(n+1, fullname)
                 import traceback
                 for record in traceback.format_exception(*sys.exc_info()):
                     for line in record.splitlines():
-                        print('  '+line, file=sys.stderr)
-                print("\nRemainder of file ignored", file=sys.stderr)
+                        try:
+                            print('  '+line, file=sys.stderr)
+                        except SyntaxError:
+                            print >>sys.stderr, '  '+line
+                try:
+                    print("\nRemainder of file ignored", file=sys.stderr)
+                except SyntaxError:
+                    print >>sys.stderr, "\nRemainder of file ignored"
                 break
     if reset:
         known_paths = None
