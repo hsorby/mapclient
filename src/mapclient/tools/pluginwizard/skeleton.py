@@ -429,9 +429,8 @@ class Skeleton(object):
             get_config_string += '        return config\n'
 
             ui_file = os.path.join(qt_dir, QT_CONFDIALOG_UI_FILENAME)
-            fui = open(ui_file, 'w')
-            fui.write(CONFIGURE_DIALOG_UI.format(widgets_string))
-            fui.close()
+            with open(ui_file, 'w') as fui:
+                fui.write(CONFIGURE_DIALOG_UI.format(widgets_string))
 
             # Difficulties arise when cross Python version calling pyside-uic.
             try:

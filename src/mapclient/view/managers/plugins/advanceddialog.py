@@ -102,7 +102,7 @@ class AdvancedDialog(QDialog):
 
     def fillInstalledPackagesList(self):
         # virt_env_dir = self._ui.virtEnvLocation.text()
-        # need to change so that have list stored within applicarion settings that is uodated every time a package is installed - much faster to load
+        # need to change so that have list stored within application settings that is uodated every time a package is installed - much faster to load
         """
         virt_env_dir = 'C:\\Users\\Jonathan\\AppData\\Roaming\\Musculo Skeletal\\MAP Client\\pluginVirtEnv'
         output = subprocess.check_output([virt_env_dir + '\Scripts' + '\python.exe', virt_env_dir + '\Scripts' + '\pip.exe', 'list'], shell=True)
@@ -414,6 +414,7 @@ class AdvancedDialog(QDialog):
 
         self._pluginUpdater._pluginUpdateDict = dict(list(plugins_not_updated.items()) + list(self._pluginUpdater._pluginUpdateDict.items()))
         self.fillUpdatesList()
+
 
 def performPluginAnalysis(path, modname, resource_files):
     plugin_updater = PluginUpdater()
