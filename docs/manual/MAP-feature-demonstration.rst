@@ -244,7 +244,17 @@ The Log Information window provides useful debugging information and should be a
 Plugin Dependencies and Package Installation
 --------------------------------------------
 
-Plugin developers may use additional packages in their plugins which are not available within the native python environment. These packages may however be installed using pip (Pip Installs Packages). If your system does not have a package required to run a plugin (and hence any workflow that uses the plugin) it can be installed with pip in the MAP Client virtual python environment. This virtual environment can be set up manually (from the Advanced dialog (2)) or automatically when a package is first required (3). By default the virtual environment will be set up in the same system location as the MAP Client log files, however this may be changed using the Modify button under the Dependencies tab in the Advanced dialog (1).
+.. warning::
+
+   This functionality is currently unavailable.
+   We are working on reinstating this.
+   At the this time, this functionality has not been slated for fixing in any upcoming releases.
+
+Plugin developers may wish to use additional packages in their plugins which are not available within the native python environment.
+These packages may be installed using pip.
+If your system does not have a package required to run a plugin (and hence any workflow that uses the plugin) it can be installed with pip in the MAP Client virtual python environment.
+This virtual environment can be set up manually (from the Advanced dialog (2)) or automatically when a package is first required (3).
+By default the virtual environment will be set up in the same system location as the MAP Client log files, however this may be changed using the Modify button under the Dependencies tab in the Advanced dialog (1).
 
 .. figure:: images/dependencies_tab_ve.png
     :align: center

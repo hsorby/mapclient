@@ -6,13 +6,16 @@ MAP Plugin Creator Wizard
 
 .. sectionauthor:: Hugh Sorby
 
-.. _launchpad project: http://launchpad.net/mapclient
+.. _map project: https://github.com/MusculoskeletalAtlasProject
 .. _MAP: https://simtk.org/home/map
 
 .. note::
-   `MAP`_ is currently under active development, and this document will be updated to reflect any changes to the software or new features that are added. You can follow the development of MAP at the `launchpad project`_.
+   `MAP`_ is currently under active development, and this document will be updated to reflect any changes to the software or new features that are added.
+    You can follow the development of MAP at the `map project`_.
 
-The plugin lies at the heart of the MAP framework and the Plugin Creator Wizard creates skeleton plugins conforming to the MAP framework plugin interface.  The Plugin Creator Wizard assists with the initial plugin creation allowing the plugin developer to concentrate on implementing the plugins task.  For basic familiararity with the MAP Client please read the feature demonstration document :doc:`MAP-feature-demonstration`.
+The plugin lies at the heart of the MAP framework and the Plugin Creator Wizard creates skeleton plugins conforming to the MAP framework plugin interface.
+The Plugin Creator Wizard assists with the initial plugin creation allowing the plugin developer to concentrate on implementing the plugins task.
+For basic familiararity with the MAP Client please read the feature demonstration document :doc:`MAP-feature-demonstration`.
 
 For more detailed information on the plugin interface read the :doc:`MAP-plugin` document, this document defines the plugin interface that the new plugin must adhere to.
 

@@ -23,6 +23,10 @@ The `Setup`_ section details getting the MAP Client setup with external plugins.
 Installation
 ------------
 
+When installing MAP Client we recommend doing so into a virtual environment to avoid messing with the system Python installation.
+Information on creating and using virtual environments can be found `here <https://docs.python.org/3/library/venv.html>`__.
+This doesn't apply when using pre-built binaries because they are packaged with their own environment.
+
 Install Using Pre-Built Binary
 ------------------------------
 
@@ -30,13 +34,17 @@ For Windows there is an installer application available from:
 
   https://github.com/MusculoskeletalAtlasProject/mapclient/releases/
 
-Download and install the package.
+Download and install the package *MAP-Client-X.Y.Z.exe*.
 
+.. note::
+
+   The X.Y.Z above are placeholders for the version of MAP Client.
+   As an example, MAP Client version 0.16.2 would be called *MAP-Client-0.16.2.exe*.
 
 Install Using Pip
 -----------------
 
-Pip is a tool for installing and managing Python packages.
+Pip (Pip Installs Packages) is a tool for installing and managing Python packages.
 It is particularly suited for the installation and management of source distributions of Python software, of which the MAP Client is one.
 
 From the command line we can install MAP Client with the following command::
@@ -68,29 +76,16 @@ Then, use *Git* to clone the MAP Client source code to your system::
 
     git clone https://github.com/MusculoskeletalAtlasProject/mapclient.git
 
-Finally, run the MAP Client *setup* script to install it::
+If we are installing with Git it is usually because we are going to develop the MAP Client application itself.
+To develop the application we can install the codebase in *develop* mode.
+Installing the codebase in *develop* mode makes developing the codebase more convenient, especially if we use an IDE.
+To setup MAP Client in a development friendly way execute the following command::
 
-    pip install .
+    pip install -e mapclient/src
 
-Note that the line above should be run from the same directory as the previous command.
+.. note::
 
-Installing Pip
---------------
-
-Pip is a tool for installing and managing Python packages.  It relies on setuptools to work.
-First you must install setuptools, which has detailed instructions available here
-
-  https://pypi.python.org/pypi/setuptools#installation-instructions
-
-Next, to make sure that easy_install is installed correctly, open a command window and issue the command::
-
-  easy_install --version
-
-If this command prints out the version of setuptools you have installed then you can install pip with the command::
-
-  easy_install pip
-
-otherwise you will probably need to adjust the PATH system variable so that the easy_install application is available. 
+   Note that the line above should be run from the same directory as the previous command.
 
 Installing Python on Windows
 ----------------------------
@@ -113,9 +108,9 @@ Setup
 External Plugins
 ----------------
 
-.. _github orginisation: https://github.com/mapclient-plugins
+.. _github organisation: https://github.com/mapclient-plugins
 
 The installation of external MAP Client plugins is a two step process.
 The first step is to download the plugins onto the local file system, the second step is to use the :ref:`MAP plugin manager <MAP-plugin-manager-tool>` tool to identify the plugins and load them into the MAP Client.
 
-There is a `github orginisation`_ which has a collection of MAP Client plugins.
+There is a `github organisation`_ which has a collection of MAP Client plugins.
