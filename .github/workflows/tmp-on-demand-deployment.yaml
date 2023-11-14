@@ -103,7 +103,8 @@ jobs:
             url="real-pypi"
           fi
           echo "url: $url"
-          twine upload dist/* --skip-existing
+          ls src/dist/
+          twine upload src/dist/* --skip-existing
 
   installer:
     needs: setup
