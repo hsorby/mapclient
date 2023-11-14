@@ -10,6 +10,8 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       run-installer: ${{ steps.set-matrix.outputs.run-installer }}
+      package: ${{ steps.set-matrix.outputs.run-packaging }}
+      tag: ${{ steps.get-tag.outputs.tag }}
     steps:
       - name: Get the tag
         id: get-tag
@@ -62,11 +64,31 @@ jobs:
           if [ "${#matrixElements[@]}" -eq "0" ]; then
             echo run-installer=false >> $GITHUB_OUTPUT
           else
-            echo run-installer=true >> $GITHUB_OUTPUT
+            echo run-installer=false >> $GITHUB_OUTPUT
           fi
           content=`join_by ,  ${matrixElements[@]}`
           echo "{\"include\":[$content]}"
           echo "matrix={\"include\":[$content]}" >> $GITHUB_OUTPUT
+          echo run-packaging=true >> $GITHUB_OUTPUT
+  pypipackage:
+    needs: setup
+    name: PyPIPackage
+    if: needs.setup.outputs.package == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v3
+        with:
+          branch: ${{ needs.setup.outputs.tag }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - name: Create package
+        run: |
+          echo "Create a package please."
+          echo "${{ github.event.release.pre_release }}
+          ls
   installer:
     needs: setup
     name: installer
