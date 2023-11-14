@@ -97,6 +97,12 @@ jobs:
           pip install -e src/
           pip list
           python -m build --wheel src/
+          if [ '${{ github.event.release.prerelease }}' = 'true' ]; then
+            url="test-pypi"
+          else
+            url="real-pypi"
+          fi
+          echo "url: $url"
           twine upload dist/* --skip-existing
 
   installer:
