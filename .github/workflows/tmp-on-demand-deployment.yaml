@@ -1,4 +1,4 @@
-name: on-demand-deployment
+name: tmp-on-demand-deployment
 
 on:
   push
@@ -92,7 +92,11 @@ jobs:
           echo "${{ github.event.release.prerelease }}"
           echo "actual action/checkout branch: ${{ needs.setup.outputs.tag }}"
           ls
+          pip install --upgrade pip
+          pip install build
+          pip install -e src/
           pip list
+
   installer:
     needs: setup
     name: installer
