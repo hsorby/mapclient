@@ -93,9 +93,11 @@ jobs:
           echo "actual action/checkout branch: ${{ needs.setup.outputs.tag }}"
           ls
           pip install --upgrade pip
-          pip install build
+          pip install build twine
           pip install -e src/
           pip list
+          python -m build --wheel src/
+          twine upload dist/* --skip-existing
 
   installer:
     needs: setup
