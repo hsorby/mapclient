@@ -84,6 +84,16 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      - name: Set target url
+        id: target-url
+        run: |
+          if [ '${{ github.event.release.prerelease }}' = 'true' ]; then
+            url="https://test.pypi.org/legacy/"
+          else
+            url="https://pypi.org/legacy/"
+          fi
+          echo "url: $url"
+          echo pypi-url=$url >> $GITHUB_OUTPUT
       - name: Create package
         run: |
           echo "Create a package please."
@@ -93,18 +103,20 @@ jobs:
           echo "actual action/checkout branch: ${{ needs.setup.outputs.tag }}"
           ls
           pip install --upgrade pip
-          pip install build twine
+          pip install build
           pip install -e src/
           pip list
           python -m build --wheel src/
-          if [ '${{ github.event.release.prerelease }}' = 'true' ]; then
-            url="test-pypi"
-          else
-            url="real-pypi"
-          fi
-          echo "url: $url"
           ls src/dist/
-          twine upload src/dist/* --skip-existing
+          echo "this: ${{ steps.target-url.outputs.pypi-url }}"
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: src/dist/
+          skip-existing: true
+
 
   installer:
     needs: setup
