@@ -87,7 +87,7 @@ jobs:
       - name: Create package
         run: |
           echo "Create a package please."
-          echo "${{ github.event.release.pre_release }}
+          echo "${{ github.event.release.pre_release }}"
           echo "actual action/checkout branch: ${{ needs.setup.outputs.tag }}"
           ls
   installer:
