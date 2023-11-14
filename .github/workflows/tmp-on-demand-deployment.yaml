@@ -70,6 +70,7 @@ jobs:
           echo "{\"include\":[$content]}"
           echo "matrix={\"include\":[$content]}" >> $GITHUB_OUTPUT
           echo run-packaging=true >> $GITHUB_OUTPUT
+
   pypipackage:
     needs: setup
     name: PyPIPackage
@@ -89,6 +90,8 @@ jobs:
         run: |
           if [ '${{ github.event.release.prerelease }}' = 'true' ]; then
             url="https://test.pypi.org/legacy/"
+            echo "__version__ = '${{ needs.setup.outputs.tag }}'"
+            echo "__version__ = '${{ needs.setup.outputs.tag }}'" > src/mapclient/settings/version.py
           else
             url="https://pypi.org/legacy/"
           fi
@@ -116,7 +119,6 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
           packages-dir: src/dist/
           skip-existing: true
-
 
   installer:
     needs: setup
