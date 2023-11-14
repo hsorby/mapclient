@@ -90,10 +90,10 @@ jobs:
         run: |
           if [ '${{ github.event.release.prerelease }}' = 'true' ]; then
             url="https://test.pypi.org/legacy/"
-            echo "__version__ = '${{ needs.setup.outputs.tag }}'\n"
-            echo "__version__ = '0.20.0.dev1'\n" > src/mapclient/settings/version.py
           else
             url="https://pypi.org/legacy/"
+            echo "__version__ = '${{ needs.setup.outputs.tag }}'\n"
+            echo "__version__ = '0.20.0.dev1'\n" > src/mapclient/settings/version.py
           fi
           echo "url: $url"
           echo pypi-url=$url >> $GITHUB_OUTPUT
