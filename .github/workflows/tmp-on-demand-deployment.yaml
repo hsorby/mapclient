@@ -90,8 +90,8 @@ jobs:
         run: |
           if [ '${{ github.event.release.prerelease }}' = 'true' ]; then
             url="https://test.pypi.org/legacy/"
-            echo "__version__ = '${{ needs.setup.outputs.tag }}'"
-            echo "__version__ = '${{ needs.setup.outputs.tag }}'" > src/mapclient/settings/version.py
+            echo "__version__ = '${{ needs.setup.outputs.tag }}'\n"
+            echo "__version__ = '0.20.0.dev1'\n" > src/mapclient/settings/version.py
           else
             url="https://pypi.org/legacy/"
           fi
@@ -104,13 +104,12 @@ jobs:
           echo "${{ github.event.release }}"
           echo "${{ github.event.release.prerelease }}"
           echo "actual action/checkout branch: ${{ needs.setup.outputs.tag }}"
-          ls
+          cat src/mapclient/settings/version.py
           pip install --upgrade pip
           pip install build
           pip install -e src/
           pip list
           python -m build --wheel src/
-          ls src/dist/
           echo "this: ${{ steps.target-url.outputs.pypi-url }}"
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
