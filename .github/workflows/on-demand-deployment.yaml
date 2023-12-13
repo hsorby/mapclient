@@ -6,7 +6,7 @@ on:
 
 jobs:
   setup:
-    if: github.repository == 'MusculoskeletalAtlasProject/mapclient'
+    if: github.repository == 'hsorby/mapclient'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -60,14 +60,14 @@ jobs:
           fi
           if [ "${{ steps.req-assets.outputs.include_mapping_tools }}" == "true" ]; then
             matrixElements+=('{"os":"windows-2019","variant":"mapping-tools","tag":"${{ steps.get-tag.outputs.tag }}","release-name":"${{ steps.get-release-name.outputs.name }}","python-version":"3.9"}')
-            matrixElements+=('{"os":"macos-11","variant":"mapping-tools","tag":"${{ steps.get-tag.outputs.tag }}","release-name":"${{ steps.get-release-name.outputs.name }}","python-version":"3.9"}')
+            #matrixElements+=('{"os":"macos-11","variant":"mapping-tools","tag":"${{ steps.get-tag.outputs.tag }}","release-name":"${{ steps.get-release-name.outputs.name }}","python-version":"3.9"}')
           fi
           if [ "${#matrixElements[@]}" -eq "0" ]; then
             echo run-installer=false >> $GITHUB_OUTPUT
             echo run-packaging=false >> $GITHUB_OUTPUT
           else
             echo run-installer=true >> $GITHUB_OUTPUT
-            echo run-packaging=true >> $GITHUB_OUTPUT
+            echo run-packaging=false >> $GITHUB_OUTPUT
           fi
           content=`join_by ,  ${matrixElements[@]}`
           echo "{\"include\":[$content]}"
@@ -201,6 +201,21 @@ jobs:
           file(TO_NATIVE_PATH "${ASSET_PATH}" _NATIVE_PATH)
           message(STATUS "file: ${_NATIVE_PATH}")
           file(APPEND $ENV{GITHUB_OUTPUT} "file=${_NATIVE_PATH}")
+      - name: Code sign asset
+        if: runner.os == 'Windows'
+        uses: azure/azure-code-signing-action@v0.2.22
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: https://maptechleadkeyvault.vault.azure.net/
+          code-signing-account-name: MAPTechLeadKeyVault
+          certificate-profile-name: EVCertificate
+          files-folder: ${{ steps.create-installer.outputs.file }}
+          files-folder-filter: exe,dll
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
       - name: Upload asset
         uses: softprops/action-gh-release@v1
         with:
