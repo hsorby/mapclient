@@ -215,7 +215,7 @@ jobs:
           azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           endpoint: https://maptechleadkeyvault.vault.azure.net/
           code-signing-account-name: MAPTechLeadKeyVault
-          certificate-profile-name: EVCertificate
+          certificate-profile-name: MAPTechLeadKeyVault
           files-folder: ${{ steps.create-installer.outputs.file }}
           files-folder-filter: exe,dll
           file-digest: SHA256
