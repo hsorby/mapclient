@@ -166,11 +166,16 @@ jobs:
 
           # Manually install PyInstaller rather than use the dev install requires from setup.py.
           $pip_exe install pyinstaller
-          
+
+          echo "================"
+          echo "$GITHUB_WORKSPACE"          
           ls $GITHUB_WORKSPACE/
+          echo "================"
+          echo "$GITHUB_WORKSPACE"
+          ls $GITHUB_WORKSPACE/mapclient
 
           if [ "${{ matrix.variant }}" == "mapclient" ]; then
-            $python_exe prepare_mapclient_release.py ${{ matrix.tag }}
+            $python_exe prepare_mapclient_release.py -l $GITHUB_WORKSPACE/mapclient ${{ matrix.tag }}
             variant=
           elif [ "${{ matrix.variant }}" == "mapping-tools" ]; then
             $python_exe prepare_mapclient_release.py ${{ matrix.tag }} -l $GITHUB_WORKSPACE/mapclient -v mapping-tools -p plugin_listing.txt -w workflow_listing.txt
