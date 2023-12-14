@@ -131,6 +131,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Checkout codebase
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.setup.outputs.tag }}
       - name: Setup scripts
         uses: actions/checkout@v3
         with:
