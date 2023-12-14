@@ -135,6 +135,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ needs.setup.outputs.tag }}
+          path: mapclient
       - name: Setup scripts
         uses: actions/checkout@v3
         with:
