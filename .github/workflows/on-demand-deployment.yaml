@@ -21,6 +21,7 @@ jobs:
         run: |
           echo "Setting tag as: ${GITHUB_REF#refs/tags/}"
           echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "tag=v0.20.0" >> $GITHUB_OUTPUT
       - name: Get the release name
         id: get-release-name
         shell: bash
@@ -50,6 +51,7 @@ jobs:
               file(APPEND $ENV{GITHUB_OUTPUT} "include_installer=true\n")
             endif()
           endforeach()
+          file(APPEND $ENV{GITHUB_OUTPUT} "include_installer=true\n")
       - name: set_matrix
         id: set-matrix
         run: |
