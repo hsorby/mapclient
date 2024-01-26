@@ -1,12 +1,13 @@
 name: on-demand-deployment
 
 on:
-  release:
-    types: [edited]
+  push:
+#  release:
+#    types: [edited]
 
 jobs:
   setup:
-    if: github.repository == 'MusculoskeletalAtlasProject/mapclient'
+    if: github.repository == 'hsorby/mapclient'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -24,7 +25,7 @@ jobs:
         id: get-release-name
         shell: bash
         run: |
-          tag=${GITHUB_REF#refs/tags/}
+          tag=${{ steps.get-tag.outputs.tag }}
           bare_tag=${tag/v/}
           IFS='.' read -ra bare_tag_parts <<< "$bare_tag"
           name="${bare_tag_parts[0]}.${bare_tag_parts[1]}.${bare_tag_parts[2]}"
@@ -147,12 +148,11 @@ jobs:
         with:
           repository: hsorby/mapclientreleasescripts
           path: scripts
-          ref: v0.20.0
-      - name: Create installer asset
-        id: create-installer
+      - name: Setup Python virtual environment
+        id: python-environment
         shell: bash
         run: |
-          echo "Creating installer asset"
+          echo "Creating application asset"
           python -m venv venv
           if [ "$RUNNER_OS" == "macOS" ]; then
             python_exe=$GITHUB_WORKSPACE/venv/bin/python
@@ -166,23 +166,60 @@ jobs:
             echo "$RUNNER_OS not supported"
             exit 1
           fi
+          
+          echo "python_exe=$python_exe"
+          echo "python_exe=$python_exe" >> $GITHUB_OUTPUT
+          echo "pip_exe=$pip_exe"
+          echo "pip_exe=$pip_exe" >> $GITHUB_OUTPUT
+
+      - name: Create application asset
+        id: create-application
+        shell: bash
+        run: |
+          echo "Creating application asset"
           cd $GITHUB_WORKSPACE
           cd scripts
           # ${{ steps.get_tag.outputs.tag }}
 
           # Manually install PyInstaller rather than use the dev install requires from setup.py.
-          $pip_exe install pyinstaller
+          ${{ steps.python-environment.outputs.pip_exe }} install pyinstaller
 
           if [ "${{ matrix.variant }}" == "mapclient" ]; then
-            $python_exe prepare_mapclient_release.py -l $GITHUB_WORKSPACE/mapclient ${{ matrix.tag }}
+            script_branch=standard
             variant=
           elif [ "${{ matrix.variant }}" == "mapping-tools" ]; then
-            $python_exe prepare_mapclient_release.py ${{ matrix.tag }} -l $GITHUB_WORKSPACE/mapclient -v mapping-tools -p plugin_listing.txt -w workflow_listing.txt
+            script_branch=${{ matrix.variant }}
             variant="-${{ matrix.variant }}"
           else
             echo "Variant not supported"
             exit 2
           fi
+
+          git checkout $script_branch
+          ${{ steps.python-environment.outputs.python_exe }} create_mapclient_application.py -l $GITHUB_WORKSPACE/mapclient ${{ matrix.tag }}
+          
+          echo $asset
+          echo "file=$asset" >> $GITHUB_OUTPUT
+          echo "variant=$variant" >> $GITHUB_OUTPUT
+
+      - name: Code sign application asset - Windows
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          dotnet tool install --global AzureSignTool
+          AzureSignTool sign -kvu "${{ secrets.AZURE_KEY_VAULT_URI }}" -kvi "${{ secrets.AZURE_CLIENT_ID }}" -kvt "${{ secrets.AZURE_TENANT_ID }}" -kvs "${{ secrets.AZURE_CLIENT_SECRET }}" -kvc ${{ secrets.AZURE_CERT_NAME }} -tr http://timestamp.acs.microsoft.com -v ${{ steps.create-installer.outputs.file }}
+
+      - name: Create installer asset
+        id: create-installer
+        shell: bash
+        run: |
+          echo "Creating installer asset"
+
+          variant=${{ steps.create-application.outputs.variant }}
+          cd $GITHUB_WORKSPACE
+          cd scripts
+          
+          ${{ steps.python-environment.outputs.python_exe }} create_mapclient_installer.py -l $GITHUB_WORKSPACE/mapclient ${{ matrix.tag }}
 
           if [ "$RUNNER_OS" == "macOS" ]; then
             #echo "Have to find out how to modify a finder window in headless mode with AppleScript."
@@ -196,10 +233,10 @@ jobs:
             echo "$RUNNER_OS not supported"
             exit 1
           fi
+          
           echo $asset
           echo "file=$asset" >> $GITHUB_OUTPUT
-          echo "Upload it ..."
-      - name: Code sign Windows asset
+      - name: Code sign installer asset - Windows
         if: runner.os == 'Windows'
         shell: bash
         run: |
