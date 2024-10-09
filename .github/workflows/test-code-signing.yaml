@@ -172,6 +172,7 @@ jobs:
             -SigningPolicySlug "MAP_Client_Release_Candidate_Policy" `
             -OutputArtifactPath "${{ steps.create-application.outputs.file }}" `
             -WaitForCompletion
+            -Force
 
       - name: Create installer asset
         id: create-installer
@@ -216,6 +217,7 @@ jobs:
             -SigningPolicySlug "MAP_Client_Release_Candidate_Policy" `
             -OutputArtifactPath "${{ steps.create-installer.outputs.file }}" `
             -WaitForCompletion
+            -Force
 
       - name: Notarize and Staple installer (macOS)
         if: runner.os == 'macOS'
