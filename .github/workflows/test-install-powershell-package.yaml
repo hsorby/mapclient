@@ -1,4 +1,4 @@
-name: test-code-signing
+name: test-install-powershell-package
 
 on:
   push:
