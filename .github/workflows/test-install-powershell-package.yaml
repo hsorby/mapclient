@@ -76,4 +76,4 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          Install-Module -Name SignPath
+          Install-Module -Name SignPath -MinimumVersion 4.4.1 -Force
