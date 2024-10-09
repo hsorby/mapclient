@@ -171,7 +171,7 @@ jobs:
             -ProjectSlug "MAP_Client" `
             -SigningPolicySlug "MAP_Client_Release_Candidate_Policy" `
             -OutputArtifactPath "${{ steps.create-application.outputs.file }}" `
-            -WaitForCompletion
+            -WaitForCompletion `
             -Force
 
       - name: Create installer asset
@@ -216,7 +216,7 @@ jobs:
             -ProjectSlug "MAP_Client" `
             -SigningPolicySlug "MAP_Client_Release_Candidate_Policy" `
             -OutputArtifactPath "${{ steps.create-installer.outputs.file }}" `
-            -WaitForCompletion
+            -WaitForCompletion `
             -Force
 
       - name: Notarize and Staple installer (macOS)
