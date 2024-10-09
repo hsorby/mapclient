@@ -6,7 +6,7 @@ on:
 
 jobs:
   setup:
-    if: github.repository == 'not-hsorby/mapclient'
+    if: github.repository == 'hsorby/mapclient'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -76,7 +76,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          Install-Module -Name SignPath -MinimumVersion 4.4.1
+          Install-Module -Name SignPath -MinimumVersion 4.4.1 -Force
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
